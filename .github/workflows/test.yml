@@ -1,0 +1,46 @@
+name: CI for my-app
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+      - name: Build and start services
+        run: |
+          docker-compose up --build -d
+
+      # Step 4: Test connectivity (frontend to backend)
+      - name: Test frontend-to-backend connectivity
+        run: |
+          # Wait for services to be ready
+          sleep 10
+          # Use ping inside frontend to test backend connectivity
+          docker-compose exec frontend ping -c 5 backend
+      - name: Test backend-to-frontend connectivity
+        run: |
+          # Wait for services to be ready
+          sleep 10
+          # Use ping inside frontend to test backend connectivity
+          docker-compose exec backend ping -c 5 frontend
+
+      # Step 5: Shut down services after tests
+      - name: Tear down services
+        if: always()
+        run: docker-compose down
