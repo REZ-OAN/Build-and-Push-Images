@@ -22,22 +22,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
-      - name: Build and start services
+      - name: Build  services
         run: |
-          docker-compose up --build -d
+          docker-compose build --no-cache
+      - name: Start Services
+        run: |
+          docker-compose up 
 
       # Step 4: Test connectivity (frontend to backend)
       - name: Test frontend-to-backend connectivity
         run: |
-          # Wait for services to be ready
-          sleep 10
-          # Use ping inside frontend to test backend connectivity
           docker-compose exec frontend ping -c 5 backend
       - name: Test backend-to-frontend connectivity
         run: |
-          # Wait for services to be ready
-          sleep 10
-          # Use ping inside frontend to test backend connectivity
           docker-compose exec backend ping -c 5 frontend
 
       # Step 5: Shut down services after tests
