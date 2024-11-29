@@ -27,7 +27,7 @@ jobs:
           docker-compose build --no-cache
       - name: Start Services
         run: |
-          docker-compose up 
+          docker-compose up -d
 
       # Step 4: Test connectivity (frontend to backend)
       - name: Test frontend-to-backend connectivity
