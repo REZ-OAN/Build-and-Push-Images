@@ -5,6 +5,11 @@ jobs:
   push_to_registry:
     name: push docker image to hub
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
     steps:
       - name: check repository
         uses: actions/checkout@v4
